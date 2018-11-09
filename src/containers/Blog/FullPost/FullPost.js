@@ -8,10 +8,10 @@ class FullPost extends Component {
         post: null
     }
 
-    componentDidUpdate() {
-        if (this.props.id) {
-            if (!this.state.post || (this.state.post && this.state.post.id !== this.props.id)) {
-                Axios.get('/posts/' + this.props.id).then((res) => {
+    loadData() {
+        if (this.props.match.params.id) {
+            if (!this.state.post || (this.state.post && this.state.post.id != this.props.match.params.id)) {
+                Axios.get('/posts/' + this.props.match.params.id).then((res) => {
                     this.setState({post: res.data, postLoaded: true});
                 });
             }           
@@ -25,8 +25,9 @@ class FullPost extends Component {
     }
 
     render () {
+        console.log('rendering');
         let post = <p style={{textAlign: 'center'}}>Please select a Post!</p>;
-        if (this.props.id) {
+        if (this.props.match.params.id) {
             post = <p style={{textAlign: 'center'}}>Loading</p>;
         }
         if (this.state.post) {
@@ -43,6 +44,14 @@ class FullPost extends Component {
         }
         
         return post;
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    componentDidUpdate() {
+        this.loadData();
     }
 }
 

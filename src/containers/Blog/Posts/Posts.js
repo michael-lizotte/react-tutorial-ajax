@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import Axios from '../../../axios';
 
 import Post from '../../../components/Post/Post';
+import FullPost from '../FullPost/FullPost';
 import './Posts.css';
 
 class Posts extends Component {
@@ -18,12 +19,12 @@ class Posts extends Component {
     
     render () {
         let posts = <p style={{textAlign: 'center'}}>Something went wrong</p>
-        if(!this.state.error && this.state.posts.length > 0) {
+        if(!this.state.error) {
             posts = this.state.posts.map(post => {            
             return (
                 <Link 
                     key={post.id}
-                    to={'/' + post.id}>
+                    to={this.props.match.url + post.id}>
                     <Post
                         title={post.title}
                         author={post.author}
@@ -34,9 +35,12 @@ class Posts extends Component {
         }
 
         return (
-            <section className="Posts">
-                {posts}
-            </section>
+            <div>
+                <section className="Posts">
+                    {posts}
+                </section>
+                <Route path={this.props.match.url + ":id"} exact component={FullPost} />
+            </div>            
         );
     }
 
