@@ -20,11 +20,11 @@ class Posts extends Component {
     render () {
         let posts = <p style={{textAlign: 'center'}}>Something went wrong</p>
         if(!this.state.error) {
-            posts = this.state.posts.map(post => {            
+            posts = this.state.posts.map(post => {    
             return (
                 <Link 
                     key={post.id}
-                    to={this.props.match.url + post.id}>
+                    to={this.props.match.url + "/" + post.id}>
                     <Post
                         title={post.title}
                         author={post.author}
@@ -39,8 +39,8 @@ class Posts extends Component {
                 <section className="Posts">
                     {posts}
                 </section>
-                <Route path={this.props.match.url + ":id"} exact component={FullPost} />
-            </div>            
+                <Route path={this.props.match.url + "/:id"} component={FullPost} />
+            </div>
         );
     }
 

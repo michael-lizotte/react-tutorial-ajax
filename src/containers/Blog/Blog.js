@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { Route, NavLink, Switch } from 'react-router-dom';
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 
 import './Blog.css';
 import Posts from './Posts/Posts';
-import NewPost from './NewPost/NewPost';
-import FullPost from './FullPost/FullPost';
+import asyncComponent from '../../wrappers/asyncComponent';
+// import NewPost from './NewPost/NewPost';
+
+const NewPost = asyncComponent(() => {
+    return import('./NewPost/NewPost');
+})
 
 class Blog extends Component {
+    state = {
+        auth: true
+    }
+
     render () {        
         return (
             <div>
@@ -14,7 +22,7 @@ class Blog extends Component {
                     <nav>
                         <ul>
                             <li><NavLink 
-                                    to="/" 
+                                    to="/posts" 
                                     exact
                                     activeStyle={{
                                         color: '#fa923f',
@@ -24,7 +32,7 @@ class Blog extends Component {
                                 // To build a relative path: this.props.match.url + '/new-post'
                                 pathname: '/new-post',
                                 hash: '#submit',
-                                search: '?quick-submit=true'
+                                search: '?quick-submit=true' 
                             }} activeStyle={{
                                 color: '#fa923f',
                                 textDecoration: 'underline'
@@ -32,9 +40,13 @@ class Blog extends Component {
                         </ul>
                     </nav>
                 </header>
-                {/* <Route path="/" exact render={() => {return <Posts />}}/> */}
-                <Route path="/" component={Posts} />
-                <Route path="/new-post" component={NewPost} />
+
+            <Switch>
+                {this.state.auth ? <Route path="/new-post" exact component={NewPost} /> : null}
+                <Route path="/posts" component={Posts} />
+                <Route render={() => <h1>404 page not found</h1>} />
+            </Switch>
+                {/* <Redirect from="/" to="/posts" /> */}
             </div>
         );
     }
